@@ -30,7 +30,9 @@ testng.xml'den gelen browser parametresini alırız. Bu, paralel testlerin farkl
 
     // WebDriver'ı uzaktan başlatmak için gereken URL (Hub URL)
 //    private static final String HUB_URL = "http://localhost:4445/wd/hub";
-    private static final String HUB_URL = "http://seleniumHub:4444/wd/hub";// Hub servisini expose ettiğiniz port
+
+    private static final String HUB_URL = ConfigReader.getProperty("hubURL");// Hub servisini expose ettiğiniz port
+
 
     public static WebDriver getDriver() {
 
