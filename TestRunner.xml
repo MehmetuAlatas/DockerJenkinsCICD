@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Docker Selenium Grid" parallel="tests" thread-count="3">
+    
+    <listeners>
+        <listener class-name="techproed.utilities.ExtentReportsListener"></listener>
+    </listeners>
+
+    <test name="Chrome Test" parallel="false" thread-count="1">
+        <parameter name="browser" value="chrome"/>
+         <packages>
+            <package name="techproed.tests.smoke"></package>
+        </packages>
+    </test>
+
+    <test name="Firefox Test" parallel="false" thread-count="1">
+        <parameter name="browser" value="firefox"/>
+
+       <packages>
+            <package name="techproed.tests.smoke"></package>
+       </packages>
+    </test>
+
+    <test name="Edge Test" parallel="false" thread-count="1">
+        <parameter name="browser" value="edge"/>
+         <packages>
+            <package name="techproed.tests.smoke"></package>
+        </packages>
+    </test>
+
+
+</suite>
