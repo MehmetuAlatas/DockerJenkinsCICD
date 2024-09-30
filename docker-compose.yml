@@ -1,15 +1,14 @@
 version: "3"
 services:
-  Jenkins:
+  jenkins:
     image: jenkins/jenkins:jdk21
     container_name: jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - jenkins_home:/var/jenkins_home
-    networks:
-      - selenium-grid
-    restart: on-failure
+      - ./jenkins_home:/var/jenkins_home
+    restart: always
+
 volumes:
   jenkins_home:
