@@ -18,11 +18,11 @@ import java.time.Duration;
 public class Driver {
     /*
     Açıklamalar:
-Reporter.getCurrentTestResult(): Bu metod, TestNG'nin testng.xml dosyasından gelen parametreleri
-dinamik olarak almanıza olanak tanır. Böylece browser parametresini test sırasında Driver sınıfında çekebiliriz.
+    Reporter.getCurrentTestResult(): Bu metod, TestNG'nin testng.xml dosyasından gelen parametreleri
+    dinamik olarak almanıza olanak tanır. Böylece browser parametresini test sırasında Driver sınıfında çekebiliriz.
 
-browser Parametresi: Eğer ConfigReader'da bir browser değeri ayarlanmışsa onu kullanırız, değilse
-testng.xml'den gelen browser parametresini alırız. Bu, paralel testlerin farklı tarayıcılarla çalışmasını sağlar.
+    browser Parametresi: Eğer ConfigReader'da bir browser değeri ayarlanmışsa onu kullanırız, değilse
+    testng.xml'den gelen browser parametresini alırız. Bu, paralel testlerin farklı tarayıcılarla çalışmasını sağlar.
      */
 
     // ThreadLocal ile her bir test için bağımsız WebDriver tanımlanıyor
@@ -63,13 +63,13 @@ testng.xml'den gelen browser parametresini alırız. Bu, paralel testlerin farkl
         try{
             switch (browser.toLowerCase()) {
                 case "chrome":
-                    return new RemoteWebDriver(new URL(HUB_URL), new ChromeOptions());
+                    return new RemoteWebDriver(new URL(HUB_URL), getChromeOptions());
                 case "firefox":
-                    return new RemoteWebDriver(new URL(HUB_URL), new FirefoxOptions());
+                    return new RemoteWebDriver(new URL(HUB_URL), getFirefoxOptions());
                 case "edge":
-                    return new RemoteWebDriver(new URL(HUB_URL), new EdgeOptions());
+                    return new RemoteWebDriver(new URL(HUB_URL), getEdgeOptions());
                 default:
-                    return new RemoteWebDriver(new URL(HUB_URL), new ChromeOptions()); // Varsayılan Chrome
+                    return new RemoteWebDriver(new URL(HUB_URL), getChromeOptions()); // Varsayılan Chrome
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
@@ -80,16 +80,46 @@ testng.xml'den gelen browser parametresini alırız. Bu, paralel testlerin farkl
     private static WebDriver getLocalWebDriver(String browser) {
         switch (browser.toLowerCase()) {
             case "chrome":
-                return new ChromeDriver();
+                return new ChromeDriver(getChromeOptions());
             case "firefox":
-                return new FirefoxDriver();
+                return new FirefoxDriver(getFirefoxOptions());
             case "edge":
-                return new EdgeDriver();
+                return new EdgeDriver(getEdgeOptions());
             case "safari":
-                return new SafariDriver();
+                return new SafariDriver(); // Safari için headless modu yok
             default:
-                return new ChromeDriver(); // Varsayılan Chrome
+                return new ChromeDriver(getChromeOptions()); // Varsayılan Chrome
         }
+    }
+
+    // ChromeOptions ile headless desteği
+    private static ChromeOptions getChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+        if (ConfigReader.getProperty("browser").contains("headless")) {
+            options.addArguments("--headless=new");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+        }
+        return options;
+    }
+
+    // FirefoxOptions ile headless desteği
+    private static FirefoxOptions getFirefoxOptions() {
+        FirefoxOptions options = new FirefoxOptions();
+        if (ConfigReader.getProperty("browser").contains("headless")) {
+            options.addArguments("--headless");
+        }
+        return options;
+    }
+
+    // EdgeOptions ile headless desteği
+    private static EdgeOptions getEdgeOptions() {
+        EdgeOptions options = new EdgeOptions();
+        if (ConfigReader.getProperty("browser").contains("headless")) {
+            options.addArguments("--headless");
+        }
+        return options;
     }
 
     // WebDriver'ı kapatmak için kullanılan metot
